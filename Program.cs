@@ -25,6 +25,7 @@ class Etudiant
     }
         // null quand l'étudiant n'a encore aucune note
     public double? Moyenne => Notes.Count == 0 ? null : Notes.Average();
+    public bool EstAdmis => Moyenne is >= 10;
 
     public override string ToString() => $"{Matricule} | {Nom} {Prenom}";
 }
@@ -33,6 +34,7 @@ class Application
 {
     private const double NoteMin = 0;
     private const double NoteMax = 20;
+    private const double MoyenneAdmission = 10;
     private readonly List<Etudiant> etudiants = new();
 
     private int compteur = 0;
@@ -55,6 +57,7 @@ class Application
                 case 3: AjouterNote(); break;
                 case 4: AfficherNotes(); break;
                 case 5: AfficherMoyenne(); break;
+                case 6: AfficherAdmis(); break;
                 case 0: Console.WriteLine("Au revoir"); break;
             }
         } while (choix != 0);
@@ -71,8 +74,9 @@ class Application
         Console.WriteLine("3. Ajouter une note à un étudiant");
         Console.WriteLine("4. Lister les notes d'un étudiant");
         Console.WriteLine("5. Afficher la moyenne d'un étudiant");
+        Console.WriteLine("6. Afficher les étudiants admis");
         Console.WriteLine("0. Quitter");
-        return LireEntier("Votre choix : ", 0, 5);
+        return LireEntier("Votre choix : ", 0, 6);
 
 
     }
@@ -130,6 +134,17 @@ class Application
             Console.WriteLine($"Moyenne de {etudiant.Prenom} {etudiant.Nom} : {moyenne:F2}");
         else
             Console.WriteLine("Aucune note : moyenne impossible à calculer.");
+    }
+
+        private void AfficherAdmis()
+    {
+        var admis = etudiants.Where(e => e.EstAdmis).ToList();
+        if (admis.Count == 0)
+        {
+            Console.WriteLine($"Aucun admis (moyenne >= {MoyenneAdmission}).");
+            return;
+        }
+        admis.ForEach(e => Console.WriteLine($"{e} | moyenne : {e.Moyenne:F2}"));
     }
 
     // ---------- Outils ----------
