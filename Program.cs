@@ -23,6 +23,8 @@ class Etudiant
         Nom = nom;
         Prenom = prenom;
     }
+        // null quand l'étudiant n'a encore aucune note
+    public double? Moyenne => Notes.Count == 0 ? null : Notes.Average();
 
     public override string ToString() => $"{Matricule} | {Nom} {Prenom}";
 }
@@ -52,6 +54,7 @@ class Application
                 case 2: AfficherEtudiants(); break;
                 case 3: AjouterNote(); break;
                 case 4: AfficherNotes(); break;
+                case 5: AfficherMoyenne(); break;
                 case 0: Console.WriteLine("Au revoir"); break;
             }
         } while (choix != 0);
@@ -67,8 +70,9 @@ class Application
         Console.WriteLine("2. Afficher la liste des étudiants");
         Console.WriteLine("3. Ajouter une note à un étudiant");
         Console.WriteLine("4. Lister les notes d'un étudiant");
+        Console.WriteLine("5. Afficher la moyenne d'un étudiant");
         Console.WriteLine("0. Quitter");
-        return LireEntier("Votre choix : ", 0, 4);
+        return LireEntier("Votre choix : ", 0, 5);
 
 
     }
@@ -115,6 +119,17 @@ class Application
             return;
         }
         etudiant.Notes.ForEach(n => Console.WriteLine(n.ToString("F2")));
+    }
+
+        private void AfficherMoyenne()
+    {
+        Etudiant? etudiant = DemanderEtudiant();
+        if (etudiant is null) return;
+
+        if (etudiant.Moyenne is double moyenne)
+            Console.WriteLine($"Moyenne de {etudiant.Prenom} {etudiant.Nom} : {moyenne:F2}");
+        else
+            Console.WriteLine("Aucune note : moyenne impossible à calculer.");
     }
 
     // ---------- Outils ----------
