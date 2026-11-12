@@ -58,6 +58,7 @@ class Application
                 case 4: AfficherNotes(); break;
                 case 5: AfficherMoyenne(); break;
                 case 6: AfficherAdmis(); break;
+                case 7: AfficherClassement(); break;
                 case 0: Console.WriteLine("Au revoir"); break;
             }
         } while (choix != 0);
@@ -75,8 +76,9 @@ class Application
         Console.WriteLine("4. Lister les notes d'un étudiant");
         Console.WriteLine("5. Afficher la moyenne d'un étudiant");
         Console.WriteLine("6. Afficher les étudiants admis");
+        Console.WriteLine("7. Afficher le classement des étudiants");
         Console.WriteLine("0. Quitter");
-        return LireEntier("Votre choix : ", 0, 6);
+        return LireEntier("Votre choix : ", 0, 7);
 
 
     }
@@ -145,6 +147,28 @@ class Application
             return;
         }
         admis.ForEach(e => Console.WriteLine($"{e} | moyenne : {e.Moyenne:F2}"));
+    }
+
+        private void AfficherClassement()
+    {
+        // Seuls les étudiants qui ont au moins une note sont classés
+        var classes = etudiants
+            .Where(e => e.Moyenne is not null)
+            .OrderByDescending(e => e.Moyenne)
+            .ToList();
+
+        if (classes.Count == 0)
+        {
+            Console.WriteLine("Aucun étudiant à classer.");
+            return;
+        }
+
+        int rang = 1;
+        foreach (var e in classes)
+        {
+            Console.WriteLine($"{rang}. {e.Nom} {e.Prenom} ({e.Matricule}) : {e.Moyenne:F2}");
+            rang++;
+        }
     }
 
     // ---------- Outils ----------
