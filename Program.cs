@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-
+using GestNotesCS.Entity;
 try
 {
     new Application().Demarrer();
@@ -10,25 +10,6 @@ catch (InvalidOperationException)
     Console.WriteLine("Entrée fermée, arrêt du programme.");
 }
 
-class Etudiant
-{
-    public string Matricule { get; }
-    public string Nom { get; }
-    public string Prenom { get; }
-    public List<double> Notes { get; } = new();
-
-    public Etudiant(string matricule, string nom, string prenom)
-    {
-        Matricule = matricule;
-        Nom = nom;
-        Prenom = prenom;
-    }
-        // null quand l'étudiant n'a encore aucune note
-    public double? Moyenne => Notes.Count == 0 ? null : Notes.Average();
-    public bool EstAdmis => Moyenne is >= 10;
-
-    public override string ToString() => $"{Matricule} | {Nom} {Prenom}";
-}
 
 class Application
 {
@@ -140,7 +121,7 @@ class Application
 
         private void AfficherAdmis()
     {
-        var admis = etudiants.Where(e => e.EstAdmis).ToList();
+        var admis = etudiants.Where(e => e.Moyenne is >= MoyenneAdmission).ToList();
         if (admis.Count == 0)
         {
             Console.WriteLine($"Aucun admis (moyenne >= {MoyenneAdmission}).");
